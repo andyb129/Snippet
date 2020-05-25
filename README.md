@@ -16,12 +16,14 @@ Snippet = snippet@barbuzz.co.uk
 <img src="https://github.com/andyb129/Snippet/blob/master/screenshots/snippet_screenshot_2.png" alt="Snippet Screen 2"/>
 </td>
 <td>
-<img src="https://github.com/andyb129/Snippet/blob/master/screenshots/snippet_screenshot_3.png" alt="Snippet Screen 3"/>
+<img src="https://github.com/andyb129/Snippet/blob/master/screenshots/snippet_demo.gif" alt="Snippet Demo"/>
 </td>
 </tr>
 </table>
 
-Inspired by the amazing app that is Texpand - [https://play.google.com/store/apps/details?id=com.isaiasmatewos.texpand](https://play.google.com/store/apps/details?id=com.isaiasmatewos.texpand)
+### Thanks
+
+* Inspired by the amazing app that is Texpand - [https://play.google.com/store/apps/details?id=com.isaiasmatewos.texpand](https://play.google.com/store/apps/details?id=com.isaiasmatewos.texpand)
 
 * Font - [https://fonts.google.com/specimen/Snippet](https://fonts.google.com/specimen/Snippet)
 
