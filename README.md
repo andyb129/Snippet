@@ -16,7 +16,7 @@ Snippet = snippet@barbuzz.co.uk
 <img src="https://github.com/andyb129/Snippet/blob/master/screenshots/snippet_screenshot_2.png" alt="Snippet Screen 2"/>
 </td>
 <td>
-<img src="https://github.com/andyb129/Snippet/blob/master/screenshots/snippet_demo.gif" width="1480" height="720" alt="Snippet Demo"/>
+<img src="https://github.com/andyb129/Snippet/blob/master/screenshots/snippet_demo.gif" width="720" height="1480" alt="Snippet Demo"/>
 </td>
 </tr>
 </table>
