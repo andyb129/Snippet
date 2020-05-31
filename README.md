@@ -6,6 +6,10 @@ e.g.
 Abbreviation = email
 Snippet = snippet@barbuzz.co.uk
 
+<p>
+<a href="https://play.google.com/store/apps/details?id=uk.co.barbuzz.snippet"><img src="https://github.com/andyb129/Snippet/blob/master/screenshots/google_play_badge.png" height="80" width="210" alt="Snippet"/></a>
+</p>
+
 <br/>
 <table border="0">
 <tr>
