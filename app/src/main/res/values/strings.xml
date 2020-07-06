@@ -6,6 +6,7 @@
     <string name="button_save">Save</string>
     <string name="not_saved">Snippet not saved.</string>
     <string name="add_snippet">Add snippet</string>
+    <string name="db_not_restored">Database not restored</string>
 
     <string name="pref_key_paste_text_overlay_x_coord">paste_text_overlay_x_coord</string>
     <string name="pref_key_paste_text_overlay_y_coord">paste_text_overlay_y_coord</string>
@@ -30,5 +31,10 @@
     <string name="alert_dialog_message">Are you sure you want to delete this snippet?</string>
 
     <string name="empty_list_text">No Snippets at the moment. \n\nClick the plus button below to add one.</string>
+    <string name="action_backup">backup snippets</string>
+    <string name="action_restore">restore database</string>
+    <string name="db_restored">Database restored</string>
+    <string name="db_backup_success">Database backed up</string>
+    <string name="db_backup_fail">Database backup failed!</string>
 
 </resources>

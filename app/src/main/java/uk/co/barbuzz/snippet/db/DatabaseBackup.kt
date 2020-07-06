@@ -2,39 +2,38 @@ package uk.co.barbuzz.snippet.db
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Environment
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.OutputStream
+import java.io.*
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 object DatabaseBackup {
-    private const val DATABASE_NAME = ""
-    private const val FILE_NAME = ""
-    private const val LOGGER = ""
-    private const val SHAREDPREF = ""
-    private const val MODE_PRIVATE = 0
-    private const val MAXIMUM_DATABASE_FILE = 10
 
-    fun backupDatabase(context: Context, scope: CoroutineScope?) {
+    private const val LOGGER = "DatabaseBackup"
+    private const val MAXIMUM_DATABASE_FILE = 10
+    const val FILE_NAME = "snippetdb_"
+    const val FOLDER = "SnippetBackup"
+
+    fun backupSnippetDatabase(context: Context, scope: CoroutineScope?) : Boolean {
+        //Checking the availability state of the External Storage.
+        val state: String = Environment.getExternalStorageState()
+        if (Environment.MEDIA_MOUNTED != state) {
+            return false
+        }
+
+        //Create a new file that points to the root directory, with the given name
         val appDatabase = SnippetRoomDatabase.getDatabase(context, scope!!)
         appDatabase.close()
-        val dbfile = context.getDatabasePath(DATABASE_NAME)
-        val sdir = File(getFilePath(context, 0), "backup")
+        val dbfile = context.getDatabasePath(SnippetRoomDatabase.DATABASE_NAME)
+        val sdir = File(context.getExternalFilesDir(null), FOLDER)
         val fileName =
             FILE_NAME + getDateFromMillisForBackup(System.currentTimeMillis())
         val sfpath = sdir.path + File.separator + fileName
         if (!sdir.exists()) {
             sdir.mkdirs()
         } else {
-            //Directory Exists. Delete a file if count is 5 already. Because we will be creating a new.
-            //This will create a conflict if the last backup file was also on the same date. In that case,
-            //we will reduce it to 4 with the function call but the below code will again delete one more file.
             checkAndDeleteBackupFile(sdir, sfpath)
         }
         val savefile = File(sfpath)
@@ -55,15 +54,13 @@ object DatabaseBackup {
                 savedb.flush()
                 indb.close()
                 savedb.close()
-                val sharedPreferences =
-                    context.getSharedPreferences(SHAREDPREF, MODE_PRIVATE)
-                sharedPreferences.edit().putString("backupFileName", fileName).apply()
-                updateLastBackupTime(sharedPreferences)
             }
         } catch (e: Exception) {
             e.printStackTrace()
             Log.d(LOGGER, "ex: $e")
+            return false
         }
+        return true
     }
 
     private fun getDateFromMillisForBackup(currentTimeMillis: Long): String {
@@ -72,14 +69,7 @@ object DatabaseBackup {
         return SimpleDateFormat("yyyy-MM-dd", Locale.UK).format(date)
     }
 
-    private fun updateLastBackupTime(sharedPreferences: SharedPreferences) {}
-
-    private fun getFilePath(context: Context, i: Int): File? {
-        return null
-    }
-
     private fun checkAndDeleteBackupFile(directory: File, path: String?) {
-        //This is to prevent deleting extra file being deleted which is mentioned in previous comment lines.
         val currentDateFile = File(path)
         var fileIndex = -1
         var lastModifiedTime = System.currentTimeMillis()
