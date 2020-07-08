@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity(), SnippetListAdapter.OnSnippetOnClickLis
         val backupMsg = if (hasBackupFailed) {
             getString(R.string.db_backup_fail)
         } else {
-            destDir = backupSnippetDatabasePath.substringBeforeLast("Android") + "Documents/"
+            destDir = backupSnippetDatabasePath.substringBeforeLast("Android") + "Download/"
             copyFileOrDirectory(backupSnippetDatabasePath, destDir)
             String.format(getString(R.string.db_backup_success), destDir)
         }
@@ -147,8 +147,6 @@ class MainActivity : AppCompatActivity(), SnippetListAdapter.OnSnippetOnClickLis
     }
 
     private fun openFolderWithDatabaseBackup(backupSnippetDatabasePath: String) {
-        val filePath = Environment.getExternalStorageDirectory().path
-            .toString() + File.separator + "Documents" + File.separator
         val selectedUri = Uri.parse(backupSnippetDatabasePath)
         val intent = Intent(Intent.ACTION_GET_CONTENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
