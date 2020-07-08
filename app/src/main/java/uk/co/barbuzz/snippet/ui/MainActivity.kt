@@ -1,15 +1,17 @@
 package uk.co.barbuzz.snippet.ui
 
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Observer
@@ -28,10 +30,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import uk.co.barbuzz.snippet.R
 import uk.co.barbuzz.snippet.db.DatabaseBackup.backupSnippetDatabase
+import uk.co.barbuzz.snippet.db.DatabaseBackup.copyFileOrDirectory
 import uk.co.barbuzz.snippet.db.SnippetRoomDatabase
 import uk.co.barbuzz.snippet.model.Snippet
 import uk.co.barbuzz.snippet.viewmodel.SnippetViewModel
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
 import java.nio.channels.FileChannel
 
 class MainActivity : AppCompatActivity(), SnippetListAdapter.OnSnippetOnClickListener {
@@ -116,16 +123,40 @@ class MainActivity : AppCompatActivity(), SnippetListAdapter.OnSnippetOnClickLis
         }
     }
 
-    //TODO - GET BACKUP TO RESTORE TO ROOT OR DOWNLOAD FOLDER
     private fun backupDb() {
-        val backupMsg = if (backupSnippetDatabase(this, ioScope)) {
-            R.string.db_backup_success
+        var destDir = ""
+        val backupSnippetDatabasePath = backupSnippetDatabase(this, ioScope)
+        val hasBackupFailed = backupSnippetDatabasePath.isEmpty()
+        val backupMsg = if (hasBackupFailed) {
+            getString(R.string.db_backup_fail)
         } else {
-            R.string.db_backup_fail
+            destDir = backupSnippetDatabasePath.substringBeforeLast("Android") + "Documents/"
+            copyFileOrDirectory(backupSnippetDatabasePath, destDir)
+            String.format(getString(R.string.db_backup_success), destDir)
         }
-        Snackbar.make(coordinatorLayout, backupMsg, Snackbar.LENGTH_LONG)
-            .setAnchorView(fab)
-            .show()
+        val alertDialog = AlertDialog.Builder(this)
+            .setTitle(getString(R.string.alert_dialog_backup_title))
+            .setMessage(backupMsg)
+            .setNegativeButton(android.R.string.cancel, null)
+        if (!hasBackupFailed) {
+            alertDialog.setPositiveButton(android.R.string.yes, DialogInterface.OnClickListener { dialog, which ->
+                openFolderWithDatabaseBackup(destDir)
+            })
+        }
+        alertDialog.show()
+    }
+
+    private fun openFolderWithDatabaseBackup(backupSnippetDatabasePath: String) {
+        val filePath = Environment.getExternalStorageDirectory().path
+            .toString() + File.separator + "Documents" + File.separator
+        val selectedUri = Uri.parse(backupSnippetDatabasePath)
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.setDataAndType(selectedUri, "*/*")
+
+        if (intent.resolveActivityInfo(packageManager, 0) != null) {
+            startActivity(intent)
+        }
     }
 
     override fun onSnippetClicked(position: Int) {

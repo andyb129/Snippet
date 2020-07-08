@@ -34,7 +34,8 @@
     <string name="action_backup">backup snippets</string>
     <string name="action_restore">restore database</string>
     <string name="db_restored">Database restored</string>
-    <string name="db_backup_success">Database backed up</string>
+    <string name="db_backup_success">Database backed up to - %1$s \n\n Open file location?</string>
     <string name="db_backup_fail">Database backup failed!</string>
+    <string name="alert_dialog_backup_title">Database Backup</string>
 
 </resources>
